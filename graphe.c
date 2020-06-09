@@ -203,11 +203,25 @@ void afficher_graphe_largeur (pgraphe_t g, int r)
 
 void afficher_graphe_profondeur (pgraphe_t g, int r)
 {
-  /*
-    afficher les sommets du graphe avec un parcours en profondeur
-  */
-
-  return ;
+  psommet_t actuel = chercher_sommet(g, r);
+  ppile_t sommets_parcourus = creer_pile();
+  parc_t listeArcs;
+  empiler(sommets_parcourus, actuel);
+  while (!pile_vide(sommets_parcourus)) {
+    actuel = depiler(sommets_parcourus);
+    if (!actuel->parcourus){
+      printf("Label : %d, Couleur : %d\n", actuel->label, actuel->couleur);
+      actuel->parcourus = 1;
+    }
+    listeArcs = actuel->liste_arcs;
+    while ((listeArcs != NULL) && (listeArcs->dest->parcourus == 1)){
+      listeArcs = listeArcs->arc_suivant;
+    }
+    if (listeArcs != NULL){
+      empiler(sommets_parcourus, actuel);
+      empiler(sommets_parcourus, listeArcs->dest);
+    }
+  }
 }
 
 int isAllScanned(pgraphe_t g) {
