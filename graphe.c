@@ -195,12 +195,108 @@ void afficher_graphe_profondeur (pgraphe_t g, int r)
   return ;
 }
 
+int isAllScanned(pgraphe_t g) {
+  psommet_t s = g;
+  while (s != NULL) {
+    if (s->parcourus)
+      return 0;
+    s = s->sommet_suivant;
+  }
+  return 1;
+}
+
+int plus_petite_distance(int *d, psommet_t *f , int nb_sommets) {
+  int min = -1;
+  for (int i = 0; i < nb_sommets; i ++) {
+    if (!(f[i]->parcourus) && (((min == -1) && (d[i] != -1)) || ((d[i] != -1) && (min != -1) && (d[i] < d[min])))){
+      min = i;
+    }
+  }
+  if (min != -1)
+    return min;
+
+
+  //ici, on est dans le cas d'un sommet non relier, sa distance est "infini"
+
+  for (int i = 0; i < nb_sommets; i ++) {
+    if (!(f[i]->parcourus))
+      return i;
+  }
+  return 0;
+}
+
+void relacher(int u, int v, int poids, int *d, psommet_t *f, psommet_t *parents, int nb_sommets) {
+  if (d[v] > d[u] + poids) {
+    d[v] = d[u] + poids;
+    parents[v] = f[u];
+  }
+}
+
+int indice(psommet_t u, psommet_t *f, int nb_sommets) {
+  for (int i = 0; i < nb_sommets; i ++) {
+    if (f[i] == u)
+      return i;
+  }
+  return 0;
+}
+
 void algo_dijkstra (pgraphe_t g, int r)
 {
   /*
-    algorithme de dijkstra
-    des variables ou des chanmps doivent etre ajoutees dans les structures.
+    ##############################
+    INITIALISATION de l'algorithme
+    ##############################
   */
+
+  reset_parcours(g); //on reset le champ parcourus des sommets du graphes
+  int nb_sommets = nombre_sommets(g);
+  int *distance = (int *) malloc(sizeof(int) * nb_sommets);
+  // initialisation du tableau des distance
+  for (int i = 0; i < nb_sommets; i ++)
+    distance[i] = -1;
+
+  // initialisation des parents
+  psommet_t* parents = (psommet_t *) malloc(sizeof(psommet_t) * nb_sommets);
+  for (int i = 0; i < nb_sommets; i ++)
+    parents[i] = NULL;
+
+  psommet_t *f = (psommet_t *) malloc(sizeof(psommet_t) * nb_sommets);
+  psommet_t sommet_act = g;
+
+  for (int i = 0; i < nb_sommets; i ++) {
+    f[i] = sommet_act;
+    if (sommet_act->label == r)
+      distance[i] = 0;
+    sommet_act = sommet_act->sommet_suivant;
+  }
+
+  /*
+    ##############################
+              ALGORITHME
+    ##############################
+  */
+  int indice_plus_petit_sommet;
+  int indice_sommet_dest;
+  parc_t arc;
+  while (!isAllScanned(g)) {
+    indice_plus_petit_sommet = plus_petite_distance(distance, f, nb_sommets);
+    f[indice_plus_petit_sommet]->parcourus = 1;
+    arc = f[indice_plus_petit_sommet]->liste_arcs;
+    while (arc != NULL) {
+      indice_sommet_dest = indice(arc->dest, f, nb_sommets);
+      relacher(indice_plus_petit_sommet, indice_sommet_dest, arc->poids ,distance, f, parents, nb_sommets);
+      arc = arc->arc_suivant;
+    }
+  }
+  /*
+    ##############################
+                FIN
+    ##############################
+  */
+  reset_parcours(g);
+  free(distance);
+  free(parents);
+  free(f);
 
   return ;
 }
