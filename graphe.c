@@ -213,7 +213,7 @@ void afficher_graphe_profondeur (pgraphe_t g, int r)
 int isAllScanned(pgraphe_t g) {
   psommet_t s = g;
   while (s != NULL) {
-    if (s->parcourus)
+    if (!(s->parcourus))
       return 0;
     s = s->sommet_suivant;
   }
@@ -238,13 +238,6 @@ int plus_petite_distance(int *d, psommet_t *f , int nb_sommets) {
       return i;
   }
   return 0;
-}
-
-void relacher(int u, int v, int poids, int *d, psommet_t *f, psommet_t *parents, int nb_sommets) {
-  if (d[v] > d[u] + poids) {
-    d[v] = d[u] + poids;
-    parents[v] = f[u];
-  }
 }
 
 int indice(psommet_t u, psommet_t *f, int nb_sommets) {
@@ -280,8 +273,11 @@ void algo_dijkstra (pgraphe_t g, int r)
 
   for (int i = 0; i < nb_sommets; i ++) {
     f[i] = sommet_act;
-    if (sommet_act->label == r)
+    if (sommet_act->label == r){
       distance[i] = 0;
+      parents[i] = f[i];
+    }
+
     sommet_act = sommet_act->sommet_suivant;
   }
 
@@ -299,10 +295,29 @@ void algo_dijkstra (pgraphe_t g, int r)
     arc = f[indice_plus_petit_sommet]->liste_arcs;
     while (arc != NULL) {
       indice_sommet_dest = indice(arc->dest, f, nb_sommets);
-      relacher(indice_plus_petit_sommet, indice_sommet_dest, arc->poids ,distance, f, parents, nb_sommets);
+      //relacher
+      if (distance[indice_sommet_dest] == -1) {
+        distance[indice_sommet_dest] = arc->poids;
+        parents[indice_sommet_dest] = f[indice_plus_petit_sommet];
+      } else if (distance[indice_sommet_dest] > distance[indice_plus_petit_sommet] + arc->poids) {
+        distance[indice_sommet_dest] = distance[indice_plus_petit_sommet] + arc->poids;
+        parents[indice_sommet_dest] = f[indice_plus_petit_sommet];
+      }
       arc = arc->arc_suivant;
     }
   }
+
+  /*
+    ##############################
+                Affichage
+    ##############################
+  */
+
+  printf("ALGORITHME de Dijkstra \n label distance parents\n");
+  for (int i = 0; i < nb_sommets; i ++)
+      printf("  %d        %d        %d\n", f[i]->label, distance[i], parents[i]->label);
+
+
   /*
     ##############################
                 FIN
