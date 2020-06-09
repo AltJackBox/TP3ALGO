@@ -273,10 +273,8 @@ void algo_dijkstra (pgraphe_t g, int r)
 
   for (int i = 0; i < nb_sommets; i ++) {
     f[i] = sommet_act;
-    if (sommet_act->label == r){
+    if (sommet_act->label == r)
       distance[i] = 0;
-      parents[i] = f[i];
-    }
 
     sommet_act = sommet_act->sommet_suivant;
   }
@@ -293,18 +291,23 @@ void algo_dijkstra (pgraphe_t g, int r)
     indice_plus_petit_sommet = plus_petite_distance(distance, f, nb_sommets);
     f[indice_plus_petit_sommet]->parcourus = 1;
     arc = f[indice_plus_petit_sommet]->liste_arcs;
-    while (arc != NULL) {
-      indice_sommet_dest = indice(arc->dest, f, nb_sommets);
-      //relacher
-      if (distance[indice_sommet_dest] == -1) {
-        distance[indice_sommet_dest] = arc->poids;
-        parents[indice_sommet_dest] = f[indice_plus_petit_sommet];
-      } else if (distance[indice_sommet_dest] > distance[indice_plus_petit_sommet] + arc->poids) {
-        distance[indice_sommet_dest] = distance[indice_plus_petit_sommet] + arc->poids;
-        parents[indice_sommet_dest] = f[indice_plus_petit_sommet];
+    if ((arc == NULL) || (distance[indice_plus_petit_sommet] == -1)) {
+      distance[indice_sommet_dest] = -1; // sommet non relié
+    } else {
+      while (arc != NULL) {
+        indice_sommet_dest = indice(arc->dest, f, nb_sommets);
+        //relacher
+        if (distance[indice_sommet_dest] == -1) {
+          distance[indice_sommet_dest] = arc->poids;
+          parents[indice_sommet_dest] = f[indice_plus_petit_sommet];
+        } else if (distance[indice_sommet_dest] > distance[indice_plus_petit_sommet] + arc->poids) {
+          distance[indice_sommet_dest] = distance[indice_plus_petit_sommet] + arc->poids;
+          parents[indice_sommet_dest] = f[indice_plus_petit_sommet];
+        }
+        arc = arc->arc_suivant;
       }
-      arc = arc->arc_suivant;
     }
+
   }
 
   /*
@@ -314,10 +317,16 @@ void algo_dijkstra (pgraphe_t g, int r)
   */
 
   printf("ALGORITHME de Dijkstra \n label distance parents\n");
-  for (int i = 0; i < nb_sommets; i ++)
+  for (int i = 0; i < nb_sommets; i ++) {
+    if (parents[i] != NULL) {
       printf("  %d        %d        %d\n", f[i]->label, distance[i], parents[i]->label);
+    } else if (distance[i] == -1) {
+      printf("  %d        INF        X\n", f[i]->label);
+    } else {
+      printf("  %d        %d        X\n", f[i]->label, distance[i]);
+    }
 
-
+  }
   /*
     ##############################
                 FIN
