@@ -34,8 +34,8 @@ typedef struct a {
 
 typedef struct chemin {
   int longueur ; //somme des poids des arcs
-  psommet_t *list_sommet ; //list des sommets du chemin;
-  int nb_chemin; //nombre de chemin dans la liste.
+  parc_t *list_arc ; //liste des arcs du chemin;
+  int nb_arc; //nombre d'arcs dans la liste.
 } chemin_t;
 
 /*
