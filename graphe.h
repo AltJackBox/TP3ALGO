@@ -1,6 +1,7 @@
 #ifndef graphe_h
 #define graphe_h
 
+
 typedef struct a *parc_t ;
 
 /*

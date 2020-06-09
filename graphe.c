@@ -181,15 +181,18 @@ void afficher_graphe_largeur (pgraphe_t g, int r)
   pfile_t sommets_a_parcourir = creer_file();
   pgraphe_t a_traiter;
   parc_t a_ajouter;
-  Enfiler(sommets_a_parcourir, g);
+  a_traiter = chercher_sommet(g, r);
+  enfiler(sommets_a_parcourir, a_traiter);
   while(!file_vide(sommets_a_parcourir)){
-    a_traiter = Defiler(sommets_a_parcourir);
-    a_traiter->parcouru = 1;
-    printf("Label : %d, Couleur : %d\n",a_traiter->label,a_traiter->couleur);
-    a_ajouter = a_traiter->liste_arcs;
-    while(a_ajouter != NULL){
-      if(!a_ajouter->parcouru){
-        Enfiler(sommets_a_parcourir,a_ajouter->dest);
+    a_traiter = defiler(sommets_a_parcourir);
+    if(!a_traiter->parcourus){
+      a_traiter->parcourus = 1;
+      printf("Label : %d, Couleur : %d\n",a_traiter->label,a_traiter->couleur);
+      a_ajouter = a_traiter->liste_arcs;
+      while(a_ajouter != NULL){
+        if(!a_ajouter->dest->parcourus){
+          enfiler(sommets_a_parcourir,a_ajouter->dest);
+        }
         a_ajouter = a_ajouter->arc_suivant;
       }
     }
