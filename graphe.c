@@ -178,6 +178,7 @@ void reset_parcours(pgraphe_t g) {
 }
 void afficher_graphe_largeur (pgraphe_t g, int r)
 {
+  reset_parcours(g);
   pfile_t sommets_a_parcourir = creer_file();
   pgraphe_t a_traiter;
   parc_t a_ajouter;
@@ -203,6 +204,7 @@ void afficher_graphe_largeur (pgraphe_t g, int r)
 
 void afficher_graphe_profondeur (pgraphe_t g, int r)
 {
+  reset_parcours(g);
   psommet_t actuel = chercher_sommet(g, r);
   ppile_t sommets_parcourus = creer_pile();
   parc_t listeArcs;
@@ -343,7 +345,6 @@ void algo_dijkstra (pgraphe_t g, int r)
                 FIN
     ##############################
   */
-  reset_parcours(g);
   free(distance);
   free(parents);
   free(f);
