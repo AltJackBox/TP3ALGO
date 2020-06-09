@@ -12,6 +12,7 @@ typedef struct s
   parc_t     liste_arcs ; // arcs sortants du sommet
   struct s   *sommet_suivant ; // sommet suivant dans le graphe
   int        couleur ; // couleur du sommet
+  int        parcourus ; // 1 si le sommet a été parcourus, 0 sinon
 } sommet_t, *psommet_t ;
 
 /*
@@ -21,11 +22,11 @@ typedef struct s
 */
 
 typedef struct a {
-  
+
                   int         poids ; // poids de l arc
                   psommet_t   dest ;  // pointeur sommet destinataire
                   struct a *  arc_suivant ; // arc suivant
-  
+
 } arc_t, *parc_t ;
 
 /*
@@ -47,6 +48,8 @@ void lire_graphe (char * file_name, pgraphe_t *g) ;
 void ecrire_graphe (psommet_t p) ;
 
 void ecrire_graphe_colorie (psommet_t p) ;
+
+void reset_parcours(pgraphe_t g);
 
 
 
