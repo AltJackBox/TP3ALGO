@@ -237,7 +237,7 @@ int isAllScanned(pgraphe_t g) {
 int plus_petite_distance(int *d, psommet_t *f , int nb_sommets) {
   int min = -1;
   for (int i = 0; i < nb_sommets; i ++) {
-    if (!(f[i]->parcourus) && (((min == -1) && (d[i] != -1)) || ((d[i] != -1) && (min != -1) && (d[i] < d[min])))){
+    if (!(f[i]->parcourus) && (((min == -1) && (d[i] != -1)) || ((d[i] != -1) && (min != -1) && (d[i] <= d[min])))){
       min = i;
     }
   }
@@ -259,7 +259,7 @@ int indice(psommet_t u, psommet_t *f, int nb_sommets) {
     if (f[i] == u)
       return i;
   }
-  return 0;
+  exit(0);
 }
 
 void algo_dijkstra (pgraphe_t g, int r)
@@ -311,10 +311,7 @@ void algo_dijkstra (pgraphe_t g, int r)
       while (arc != NULL) {
         indice_sommet_dest = indice(arc->dest, f, nb_sommets);
         //relacher
-        if (distance[indice_sommet_dest] == -1) {
-          distance[indice_sommet_dest] = arc->poids;
-          parents[indice_sommet_dest] = f[indice_plus_petit_sommet];
-        } else if (distance[indice_sommet_dest] > distance[indice_plus_petit_sommet] + arc->poids) {
+        if ((distance[indice_sommet_dest] == -1) || (distance[indice_sommet_dest] > distance[indice_plus_petit_sommet] + arc->poids)) {
           distance[indice_sommet_dest] = distance[indice_plus_petit_sommet] + arc->poids;
           parents[indice_sommet_dest] = f[indice_plus_petit_sommet];
         }
