@@ -1,7 +1,7 @@
 #ifndef pile_h
 #define pile_h
 
-#include "a234.h"
+#include "graphe.h"
 #define MAX_PILE_SIZE       64
 
 

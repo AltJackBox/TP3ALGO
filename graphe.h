@@ -1,3 +1,5 @@
+#ifndef graphe_h
+#define graphe_h
 
 typedef struct a *parc_t ;
 
@@ -21,11 +23,11 @@ typedef struct s
 */
 
 typedef struct a {
-  
+
                   int         poids ; // poids de l arc
                   psommet_t   dest ;  // pointeur sommet destinataire
                   struct a *  arc_suivant ; // arc suivant
-  
+
 } arc_t, *parc_t ;
 
 /*
@@ -57,3 +59,6 @@ void afficher_graphe_profondeur (pgraphe_t g, int r) ;
 void afficher_graphe_largeur (pgraphe_t g, int r) ;
 
 void algo_dijkstra (pgraphe_t g, int r) ;
+
+
+#endif
