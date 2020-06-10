@@ -155,6 +155,41 @@ int main (int argc, char **argv)
       printf(" n'est pas eulerien\n");
     }
 
+    /*
+      Test chemin hamiltonien
+    */
+    int label_ham[6] = {1,6,2,3,4,5};
+    c = creer_chemin(g, label_ham, 6);
+    if (hamiltonien(g, c)) {
+      printf("Le chemin ");
+      for (int i = 0; i < 6; i++)
+        printf("%d -> ", label_ham[i]);
+      printf(" est hamiltonien\n");
+    } else {
+      printf("Le chemin ");
+      for (int i = 0; i < 6; i++)
+        printf("%d -> ", label_ham[i]);
+      printf(" n'est pas hamiltonien\n");
+    }
+    label_ham[0] = 1;
+    label_ham[1] = 6;
+    label_ham[2] = 2;
+    label_ham[3] = 3;
+    label_ham[4] = 6;
+    label_ham[5] = 2;
+    c = creer_chemin(g, label_ham, 6);
+    if (hamiltonien(g, c)) {
+      printf("Le chemin ");
+      for (int i = 0; i < 6; i++)
+        printf("%d -> ", label_ham[i]);
+      printf(" est hamiltonien\n");
+    } else {
+      printf("Le chemin ");
+      for (int i = 0; i < 6; i++)
+        printf("%d -> ", label_ham[i]);
+      printf(" n'est pas hamiltonien\n");
+    }
+
   } else {
     printf("Les test des chemins se font sur le graphe 4\n");
   }
