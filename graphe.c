@@ -353,7 +353,9 @@ void algo_dijkstra (pgraphe_t g, int r)
 }
 
 
-
+int eulerien (pgraphe_t g, chemin_t c) {
+  
+}
 
 
 // ======================================================================
