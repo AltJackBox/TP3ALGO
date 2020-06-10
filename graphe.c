@@ -366,8 +366,15 @@ void algo_dijkstra (pgraphe_t g, int r)
   return ;
 }
 
-int elementaire(pgraphe_t g, chemin_t c) {
-  return 0;
+int elementaire(pgraphe_t g, pchemin_t c) {
+  reset_arc(g);
+  for(int i = 0; i<c->nb_arc; i++){
+    if(c->list_arc[i]->parcourus == 1) {
+      return 0;
+    }
+    c->list_arc[i]->parcourus = 1;
+  }
+  return 1;
 }
 
 

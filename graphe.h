@@ -37,7 +37,7 @@ typedef struct chemin {
   int longueur ; //somme des poids des arcs
   parc_t *list_arc ; //liste des arcs du chemin;
   int nb_arc; //nombre d'arcs dans la liste.
-} chemin_t;
+} chemin_t, *pchemin_t;
 
 /*
   pgraphe_t: pointeur vers le premier sommet d'un graphe
@@ -74,13 +74,13 @@ void afficher_graphe_largeur (pgraphe_t g, int r) ;
 void algo_dijkstra (pgraphe_t g, int r) ;
 
 
-int elementaire(pgraphe_t g, chemin_t c);
+int elementaire(pgraphe_t g, pchemin_t c);
 
-int simple (pgraphe_t g, chemin_t c);
+int simple (pgraphe_t g, pchemin_t c);
 
-int eulerien (pgraphe_t g, chemin_t c);
+int eulerien (pgraphe_t g, pchemin_t c);
 
-int hamiltonien (pgraphe_t g, chemin_t c);
+int hamiltonien (pgraphe_t g, pchemin_t c);
 
 int graphe_eulerien (pgraphe_t g);
 
