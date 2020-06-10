@@ -429,6 +429,9 @@ int degre_entrant_sommet (pgraphe_t g, psommet_t s)
       listeArcs = listeArcs->arc_suivant;
     }
     sommet = sommet->sommet_suivant;
+    if (sommet != NULL){
+      listeArcs = sommet->liste_arcs;
+    }
   }
   return nbArcs;
 }
@@ -469,7 +472,7 @@ int independant (pgraphe_t g)
 {
   reset_parcours(g);
   int indep = 1;
-  psommet_t sommet = g;
+  psommet_t sommet = (psommet_t) g;
   parc_t listeArcs = g->liste_arcs;
   while (sommet != NULL){
     while (listeArcs != NULL){
@@ -480,7 +483,10 @@ int independant (pgraphe_t g)
       listeArcs->dest->parcourus = 1;
       listeArcs = listeArcs->arc_suivant;
     }
-    sommet->sommet_suivant;
+    sommet = sommet->sommet_suivant;
+    if (sommet != NULL) {
+      listeArcs = sommet->liste_arcs;
+    }
   }
   return indep;
 }
@@ -489,9 +495,8 @@ int independant (pgraphe_t g)
 
 int complet (pgraphe_t g)
 {
-  int nbSommet = nbSommets(g);
+  int nbSommet = nombre_sommets(g);
   psommet_t sommet = g;
-  parc_t listeArcs = g->liste_arcs;
   while (sommet != NULL){
     if (degre_sortant_sommet(g, sommet) != nbSommet -1){
       return 0;
@@ -506,7 +511,7 @@ int regulier (pgraphe_t g)
   int degre = degre_maximal_graphe(g);
   psommet_t sommet = g->sommet_suivant;
   while (sommet != NULL){
-    if (degre_entrant_sommet(sommet) + degre_sortant_sommet(sommet) != degre){
+    if (degre_entrant_sommet(g, sommet) + degre_sortant_sommet(g, sommet) != degre){
       return 0;
     }
     sommet = sommet->sommet_suivant;
@@ -521,6 +526,6 @@ int regulier (pgraphe_t g)
   placer les fonctions de l'examen 2017 juste apres
 */
 
-int simple (pgraphe_t g, chemin_t c){
+// int simple (pgraphe_t g, chemin_t c){
 
-}
+// }

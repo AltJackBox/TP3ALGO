@@ -37,6 +37,21 @@ int main (int argc, char **argv)
 
   ecrire_graphe_colorie (g) ;
 
-  afficher_graphe_largeur(g,1);
-  algo_dijkstra(g,1);
+  printf ("degre sortant du sommet = %d\n", degre_sortant_sommet (g,g)) ;
+  printf ("degre entrant du sommet = %d\n", degre_entrant_sommet (g, g)) ;
+  printf ("degre maximal du graphe = %d\n", degre_maximal_graphe (g)) ;
+  printf ("degre minimal du graphe = %d\n", degre_minimal_graphe (g)) ;
+  printf ("graphe indep ? = %d\n", independant (g)) ;
+  printf ("graphe complet ? = %d\n", complet (g)) ;
+  printf ("graphe regulier ? = %d\n", regulier (g)) ;
+  
+  
+  
+  
+  
+  
+  
+
+  // afficher_graphe_largeur(g,1);
+  // algo_dijkstra(g,1);
 }
