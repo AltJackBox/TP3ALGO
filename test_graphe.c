@@ -194,5 +194,9 @@ int main (int argc, char **argv)
     printf("Les test des chemins se font sur le graphe 4\n");
   }
 
-  //pchemin_t c = creer_chemin(g)
+  if(graphe_eulerien(g)){
+    printf("\nLe graphe est eulerien\n");
+  } else {
+    printf("\nLe graphe n'est pas eulerien\n");
+  }
 }

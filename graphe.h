@@ -100,6 +100,10 @@ int hamiltonien (pgraphe_t g, pchemin_t c);
 
 int graphe_eulerien (pgraphe_t g);
 
+pgraphe_t trouver_sommet_suivant(pgraphe_t g, pgraphe_t act, pchemin_t c);
+
+int verif_pont(pgraphe_t g, int r, pgraphe_t g_verif);
+
 int graphe_hamiltonien (pgraphe_t g);
 
 int distance (pgraphe_t g, int x, int y);
