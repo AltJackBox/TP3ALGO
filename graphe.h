@@ -61,6 +61,8 @@ void ecrire_graphe_colorie (psommet_t p) ;
 
 void reset_parcours(pgraphe_t g);
 
+void reset_arc(pgraphe_t g);
+
 
 
 int colorier_graphe (pgraphe_t g) ;
