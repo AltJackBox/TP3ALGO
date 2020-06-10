@@ -43,6 +43,9 @@ int main (int argc, char **argv)
 
   if (!strcmp(argv[1], "data/gr4")) {
     pchemin_t c;
+    /*
+      Test chemin élémentaire
+    */
     int label[4] = {1, 6, 2 , 3};
     c = creer_chemin(g, label, 4);
     if (elementaire(g, c)) {
@@ -70,8 +73,46 @@ int main (int argc, char **argv)
     } else {
       printf("Le chemin ");
       for (int i = 0; i < 4; i++)
-        printf("%c -> \n", label[i]);
+        printf("%d -> \n", label[i]);
       printf(" n'est pas elementaire\n");
+    }
+
+    /*
+      Test chemin simple
+    */
+
+    /*
+      Test chemin eulerien
+    */
+    label[0] = 1;
+    label[1] =  6;
+    label[2] =  2;
+    label[3] =  1;
+    c = creer_chemin(g, label, 4);
+    if (eulerien(g, c)) {
+      printf("Le chemin ");
+      for (int i = 0; i < 4; i++)
+        printf("%d -> ", label[i]);
+      printf(" est eulerien\n");
+    } else {
+      printf("Le chemin ");
+      for (int i = 0; i < 4; i++)
+        printf("%d -> ", label[i]);
+      printf(" n'est pas eulerien\n");
+    }
+
+    int label_eule[13] = {1,6,2,1,6,2,3,4,5,3,6,2,5};
+    c = creer_chemin(g, label_eule, 13);
+    if (eulerien(g, c)) {
+      printf("Le chemin ");
+      for (int i = 0; i < 13; i++)
+        printf("%d -> ", label_eule[i]);
+      printf(" est eulerien\n");
+    } else {
+      printf("Le chemin ");
+      for (int i = 0; i < 13; i++)
+        printf("%d -> ", label_eule[i]);
+      printf(" n'est pas eulerien\n");
     }
 
   } else {
