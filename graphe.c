@@ -445,7 +445,7 @@ int hamiltonien(pgraphe_t g, pchemin_t c) {
   }
   return 1;
 }
-/*
+
 int graphe_eulerien(pgraphe_t g) {
 
   reset_arc(g);
@@ -467,17 +467,40 @@ int graphe_eulerien(pgraphe_t g) {
       sommet_act = trouver_sommet_suivant(g, sommet_act, chemin);
     }
 
+
+    printf("%d ", chemin->debut->label);
+    for(int i = 0; i<chemin->nb_arc; i++){
+      printf("%d ", chemin->list_arc[i]->dest->label);
+    }
+    printf("\n");
+    if(eulerien(g,chemin)){
+      return 1;
+    }
+
     free(chemin->list_arc);
     free(chemin);
+    sommet_en_traitement = sommet_en_traitement->sommet_suivant;
   }
+  return 0;
 }
 
 pgraphe_t trouver_sommet_suivant(pgraphe_t g, pgraphe_t act, pchemin_t c){
   parc_t arc_act = act->liste_arcs;
+  parc_t arc_restant;
   while(arc_act != NULL) {
     if (arc_act->parcourus == 0) {
       arc_act->parcourus = 1;
-      if(!verif_pont(g)){
+      if(!verif_pont(g, g->label,arc_act->dest)){
+        c->longueur += arc_act->poids;
+        c->list_arc[c->nb_arc] = arc_act;
+        c->nb_arc++;
+        return act->sommet_suivant;
+      }
+      arc_restant = arc_act->arc_suivant;
+      while(arc_restant != NULL && arc_restant->parcourus == 1) {
+        arc_restant = arc_restant->arc_suivant;
+      }
+      if(arc_restant == NULL){
         c->longueur += arc_act->poids;
         c->list_arc[c->nb_arc] = arc_act;
         c->nb_arc++;
@@ -488,8 +511,86 @@ pgraphe_t trouver_sommet_suivant(pgraphe_t g, pgraphe_t act, pchemin_t c){
     arc_act = arc_act->arc_suivant;
   }
   return NULL;
-}*/
+}
 
+int verif_pont(pgraphe_t g, int r, pgraphe_t g_verif)
+{
+  /*
+    ##############################
+    INITIALISATION de l'algorithme
+    ##############################
+  */
+
+  reset_parcours(g); //on reset le champ parcourus des sommets du graphes
+  int nb_sommets = nombre_sommets(g);
+  int *distance = (int *) malloc(sizeof(int) * nb_sommets);
+  // initialisation du tableau des distance
+  for (int i = 0; i < nb_sommets; i ++)
+    distance[i] = -1;
+
+  // initialisation des parents
+  psommet_t* parents = (psommet_t *) malloc(sizeof(psommet_t) * nb_sommets);
+  for (int i = 0; i < nb_sommets; i ++)
+    parents[i] = NULL;
+
+  psommet_t *f = (psommet_t *) malloc(sizeof(psommet_t) * nb_sommets);
+  psommet_t sommet_act = g;
+
+  for (int i = 0; i < nb_sommets; i ++) {
+    f[i] = sommet_act;
+    if (sommet_act->label == r)
+      distance[i] = 0;
+
+    sommet_act = sommet_act->sommet_suivant;
+  }
+
+  /*
+    ##############################
+              ALGORITHME
+    ##############################
+  */
+  int indice_plus_petit_sommet;
+  int indice_sommet_dest;
+  parc_t arc;
+  while (!isAllScanned(g)) {
+    indice_plus_petit_sommet = plus_petite_distance(distance, f, nb_sommets);
+    f[indice_plus_petit_sommet]->parcourus = 1;
+    arc = f[indice_plus_petit_sommet]->liste_arcs;
+    if ((arc == NULL) || (distance[indice_plus_petit_sommet] == -1)) {
+      distance[indice_sommet_dest] = -1; // sommet non relié
+    } else {
+      while (arc != NULL) {
+        if(arc->parcourus == 0){
+          indice_sommet_dest = indice(arc->dest, f, nb_sommets);
+          //relacher
+          if ((distance[indice_sommet_dest] == -1) || (distance[indice_sommet_dest] > distance[indice_plus_petit_sommet] + arc->poids)) {
+            distance[indice_sommet_dest] = distance[indice_plus_petit_sommet] + arc->poids;
+            parents[indice_sommet_dest] = f[indice_plus_petit_sommet];
+          }
+        }
+        arc = arc->arc_suivant;
+      }
+    }
+
+  }
+
+  /*
+    ##############################
+                FIN
+    ##############################
+  */
+
+  if(distance[indice(g_verif, f, nb_sommets)] == -1) {
+    free(distance);
+    free(parents);
+    free(f);
+    return 1;
+  }
+  free(distance);
+  free(parents);
+  free(f);
+  return 0;
+}
 
 // ======================================================================
 
