@@ -176,6 +176,20 @@ void reset_parcours(pgraphe_t g) {
     sommet_act = sommet_act->sommet_suivant;
   }
 }
+
+void reset_arc(pgraphe_t g) {
+  psommet_t sommet_act = g;
+  parc_t arc_act;
+  while (sommet_act != NULL) {
+    arc_act = sommet_act->liste_arcs;
+    while (arc_act != NULL) {
+      arc_act->parcourus = 0;
+      arc_act = arc_act->arc_suivant;
+    }
+    sommet_act = sommet_act->sommet_suivant;
+  }
+}
+
 void afficher_graphe_largeur (pgraphe_t g, int r)
 {
   reset_parcours(g);
@@ -352,15 +366,18 @@ void algo_dijkstra (pgraphe_t g, int r)
   return ;
 }
 
-
-int eulerien (pgraphe_t g, chemin_t c) {
-  psommet_t s;
-  psommet_t sommet_act = g;
-  parc_t arc;
-  while (sommet_act != NULL) {
-    arc = sommet_act
+int elementaire(pgraphe_t g, pchemin_t c) {
+  reset_arc(g);
+  for(int i = 0; i<c->nb_arc; i++){
+    if(c->list_arc[i]->parcourus == 1) {
+      return 0;
+    }
+    c->list_arc[i]->parcourus = 1;
   }
+  }
+  return 1;
 }
+
 
 
 // ======================================================================
