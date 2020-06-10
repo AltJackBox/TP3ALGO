@@ -432,6 +432,7 @@ int eulerien (pgraphe_t g, pchemin_t c) {
 
 int hamiltonien(pgraphe_t g, pchemin_t c) {
   reset_parcours(g);
+  c->debut->parcourus = 1;
   for(int i = 0; i<c->nb_arc; i++){
     c->list_arc[i]->dest->parcourus = 1;
   }
@@ -448,7 +449,26 @@ int hamiltonien(pgraphe_t g, pchemin_t c) {
 int graphe_eulerien(pgraphe_t g) {
   reset_arc(g);
   reset_parcours(g);
-  pgraphe_t sommet_act = g;
+  pgraphe_t sommet_en_traitement = g;
+  pgraphe_t sommet_act;
+  pchemin_t chemin;
+  while(sommet_en_traitement != NULL){
+    chemin = (pchemin_t) malloc(sizeof(chemin_t));
+    chemin->list_arc = malloc(sizeof(parc_t) * 128);
+    chemin->nb_arc = 0;
+    chemin->debut = sommet_en_traitement;
+    chemin->longueur = 0;
+
+    reset_arc(g);
+    reset_parcours(g);
+    sommet_act = sommet_en_traitement;
+    while(sommet_act != NULL){
+      sommet_act = trouver_sommet_suivant(g, sommet_act, chemin);
+    }
+
+    free(chemin->list_arc);
+    free(chemin);
+  }
 }
 
 pgraphe_t trouver_sommet_suivant(pgraphe_t g, pgraphe_t act, pchemin_t c){
@@ -458,7 +478,8 @@ pgraphe_t trouver_sommet_suivant(pgraphe_t g, pgraphe_t act, pchemin_t c){
       arc_act->parcourus = 1;
       if(!verif_pont(g)){
         c->longueur += arc_act->poids;
-        c->
+        c->list_arc[c->nb_arc] = arc_act;
+        c->nb_arc++;
         return act->sommet_suivant;
       }
       arc_act->parcourus = 0;
