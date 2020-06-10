@@ -494,7 +494,7 @@ pgraphe_t trouver_sommet_suivant(pgraphe_t g, pgraphe_t act, pchemin_t c){
         c->longueur += arc_act->poids;
         c->list_arc[c->nb_arc] = arc_act;
         c->nb_arc++;
-        return act->sommet_suivant;
+        return arc_act->dest;
       }
       arc_restant = arc_act->arc_suivant;
       while(arc_restant != NULL && arc_restant->parcourus == 1) {
@@ -504,7 +504,7 @@ pgraphe_t trouver_sommet_suivant(pgraphe_t g, pgraphe_t act, pchemin_t c){
         c->longueur += arc_act->poids;
         c->list_arc[c->nb_arc] = arc_act;
         c->nb_arc++;
-        return act->sommet_suivant;
+        return arc_act->dest;
       }
       arc_act->parcourus = 0;
     }
