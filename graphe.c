@@ -194,9 +194,9 @@ pchemin_t creer_chemin(pgraphe_t g, int *liste_label, int nb_label) {
   psommet_t sommet_act = g;
   while (sommet_act->label != liste_label[0])
     sommet_act = sommet_act->sommet_suivant;
-  pchemin_t c = (pchemin_t) malloc(sizeof(pchemin_t));
+  pchemin_t c = (pchemin_t) malloc(sizeof(chemin_t));
   c->nb_arc = nb_label - 1;
-  c->list_arc = malloc(sizeof(parc_t) * c->nb_arc);
+  c->list_arc = malloc(sizeof(arc_t) * c->nb_arc);
   c->debut = sommet_act;
   parc_t arc;
   for (int i = 1; i < nb_label; i++) {
@@ -445,8 +445,9 @@ int hamiltonien(pgraphe_t g, pchemin_t c) {
   }
   return 1;
 }
-
+/*
 int graphe_eulerien(pgraphe_t g) {
+
   reset_arc(g);
   reset_parcours(g);
   pgraphe_t sommet_en_traitement = g;
@@ -487,7 +488,7 @@ pgraphe_t trouver_sommet_suivant(pgraphe_t g, pgraphe_t act, pchemin_t c){
     arc_act = arc_act->arc_suivant;
   }
   return NULL;
-}
+}*/
 
 
 // ======================================================================
@@ -497,69 +498,116 @@ pgraphe_t trouver_sommet_suivant(pgraphe_t g, pgraphe_t act, pchemin_t c){
 
 int degre_sortant_sommet (pgraphe_t g, psommet_t s)
 {
-  /*
-    Cette fonction retourne le nombre d'arcs sortants
-    du sommet n dans le graphe g
-  */
-
-  return 0 ;
+  int nbArcs = 0;
+  parc_t listeArcs = s->liste_arcs;
+  while (listeArcs != NULL){
+    listeArcs = listeArcs->arc_suivant;
+    nbArcs++;
+  }
+  return nbArcs;
 }
 
 int degre_entrant_sommet (pgraphe_t g, psommet_t s)
 {
-  /*
-    Cette fonction retourne le nombre d'arcs entrants
-    dans le noeud n dans le graphe g
-  */
-
-  return 0 ;
+  int nbArcs = 0;
+  psommet_t sommet = g;
+  parc_t listeArcs = g->liste_arcs;
+  while (sommet != NULL){
+    while (listeArcs != NULL){
+      if (listeArcs->dest == s){
+        nbArcs++;
+      }
+      listeArcs = listeArcs->arc_suivant;
+    }
+    sommet = sommet->sommet_suivant;
+    if (sommet != NULL){
+      listeArcs = sommet->liste_arcs;
+    }
+  }
+  return nbArcs;
 }
 
 int degre_maximal_graphe (pgraphe_t g)
 {
-  /*
-    Max des degres des sommets du graphe g
-  */
-
-  return 0 ;
+  int degMax = 0;
+  int degCalcul = 0;
+  psommet_t sommet = g;
+  while (sommet != NULL){
+    degCalcul = degre_entrant_sommet(g, sommet) + degre_sortant_sommet(g, sommet);
+    if (degMax < degCalcul){
+      degMax = degCalcul;
+    }
+    sommet = sommet->sommet_suivant;
+  }
+  return degMax;
 }
 
 
 int degre_minimal_graphe (pgraphe_t g)
 {
-  /*
-    Min des degres des sommets du graphe g
-  */
-
-  return 0 ;
+  psommet_t sommet = g;
+  int degMin = degre_entrant_sommet(g, sommet) + degre_sortant_sommet(g, sommet);
+  int degCalcul = 0;
+  while (sommet != NULL){
+    degCalcul = degre_entrant_sommet(g, sommet) + degre_sortant_sommet(g, sommet);
+    if (degMin > degCalcul){
+      degMin = degCalcul;
+    }
+    sommet = sommet->sommet_suivant;
+  }
+  return degMin;
 }
 
 
 int independant (pgraphe_t g)
 {
-  /* Les aretes du graphe n'ont pas de sommet en commun */
-
-  return 0 ;
+  reset_parcours(g);
+  int indep = 1;
+  psommet_t sommet = (psommet_t) g;
+  parc_t listeArcs = g->liste_arcs;
+  while (sommet != NULL){
+    while (listeArcs != NULL){
+      if (listeArcs->dest->parcourus == 1){
+        indep = 0;
+        break;
+      }
+      listeArcs->dest->parcourus = 1;
+      listeArcs = listeArcs->arc_suivant;
+    }
+    sommet = sommet->sommet_suivant;
+    if (sommet != NULL) {
+      listeArcs = sommet->liste_arcs;
+    }
+  }
+  return indep;
 }
 
 
 
 int complet (pgraphe_t g)
 {
-  /* Toutes les paires de sommet du graphe sont jointes par un arc */
-
-  return 0 ;
+  int nbSommet = nombre_sommets(g);
+  psommet_t sommet = g;
+  while (sommet != NULL){
+    if (degre_sortant_sommet(g, sommet) != nbSommet -1){
+      return 0;
+    }
+    sommet = sommet->sommet_suivant;
+  }
+  return 1;
 }
 
 int regulier (pgraphe_t g)
 {
-  /*
-     graphe regulier: tous les sommets ont le meme degre
-     g est le ponteur vers le premier sommet du graphe
-     renvoie 1 si le graphe est régulier, 0 sinon
-  */
-
-  return 0 ;
+  int degre = degre_maximal_graphe(g);
+  psommet_t sommet = g->sommet_suivant;
+  while (sommet != NULL){
+    if (degre_entrant_sommet(g, sommet) + degre_sortant_sommet(g, sommet) != degre){
+      return 0;
+    }
+    sommet = sommet->sommet_suivant;
+  }
+  return 1;
 }
 
 
@@ -568,3 +616,7 @@ int regulier (pgraphe_t g)
 /*
   placer les fonctions de l'examen 2017 juste apres
 */
+
+// int simple (pgraphe_t g, chemin_t c){
+
+// }
