@@ -76,6 +76,20 @@ void afficher_graphe_largeur (pgraphe_t g, int r) ;
 void algo_dijkstra (pgraphe_t g, int r) ;
 
 
+int degre_sortant_sommet (pgraphe_t g, psommet_t s);
+
+int degre_entrant_sommet (pgraphe_t g, psommet_t s);
+
+int degre_maximal_graphe (pgraphe_t g);
+
+int degre_minimal_graphe (pgraphe_t g);
+
+int independant (pgraphe_t g);
+
+int complet (pgraphe_t g);
+
+int regulier (pgraphe_t g);
+
 int elementaire(pgraphe_t g, pchemin_t c);
 
 int simple (pgraphe_t g, pchemin_t c);
