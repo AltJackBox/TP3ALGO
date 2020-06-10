@@ -388,12 +388,13 @@ void algo_dijkstra (pgraphe_t g, int r)
 }
 
 int elementaire(pgraphe_t g, pchemin_t c) {
-  reset_arc(g);
+  reset_parcours(g);
+  c->debut->parcourus = 1;
   for(int i = 0; i<c->nb_arc; i++){
-    if(c->list_arc[i]->parcourus == 1) {
+    if(c->list_arc[i]->dest->parcourus == 1) {
       return 0;
     }
-    c->list_arc[i]->parcourus = 1;
+    c->list_arc[i]->dest->parcourus = 1;
   }
   return 1;
 }
@@ -436,7 +437,7 @@ int hamiltonien(pgraphe_t g, pchemin_t c) {
 int graphe_eulerien(pgraphe_t g) {
   reset_arc(g);
   reset_parcours(g);
-  pgraphe_t sommet_act
+  pgraphe_t sommet_act = g;
 }
 
 pgraphe_t trouver_sommet_suivant(pgraphe_t g, pgraphe_t act, pchemin_t c){
@@ -445,13 +446,13 @@ pgraphe_t trouver_sommet_suivant(pgraphe_t g, pgraphe_t act, pchemin_t c){
     if (arc_act->parcourus == 0) {
       arc_act->parcourus = 1;
       if(!verif_pont(g)){
-        c->longueur += act->poids;
+        c->longueur += arc_act->poids;
         c->
         return act->sommet_suivant;
       }
       arc_act->parcourus = 0;
     }
-    arc_act = arc_act->arc_suivant
+    arc_act = arc_act->arc_suivant;
   }
   return NULL;
 }
