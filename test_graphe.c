@@ -73,13 +73,45 @@ int main (int argc, char **argv)
     } else {
       printf("Le chemin ");
       for (int i = 0; i < 4; i++)
-        printf("%d -> \n", label[i]);
+        printf("%d -> ", label[i]);
       printf(" n'est pas elementaire\n");
     }
 
     /*
       Test chemin simple
     */
+    int label_simple[5] = {3,4,5,3,4};
+    c = creer_chemin(g, label_simple, 5);
+    if (simple(g, c)) {
+      printf("Le chemin ");
+      for (int i = 0; i < 5; i++)
+        printf("%d -> ", label_simple[i]);
+      printf(" est simple\n");
+    } else {
+      printf("Le chemin ");
+      for (int i = 0; i < 5; i++)
+        printf("%d -> ", label_simple[i]);
+      printf(" n'est pas simple\n");
+    }
+
+    label_simple[0] = 3;
+    label_simple[1] =  4;
+    label_simple[2] =  5;
+    label_simple[3] =  3;
+    label_simple[4] =  6;
+    c = creer_chemin(g, label_simple, 5);
+    if (simple(g, c)) {
+      printf("Le chemin ");
+      for (int i = 0; i < 5; i++)
+        printf("%d -> ", label_simple[i]);
+      printf(" est simple\n");
+    } else {
+      printf("Le chemin ");
+      for (int i = 0; i < 5; i++)
+        printf("%d -> ", label_simple[i]);
+      printf(" n'est pas simple\n");
+    }
+
 
     /*
       Test chemin eulerien

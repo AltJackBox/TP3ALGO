@@ -194,9 +194,9 @@ pchemin_t creer_chemin(pgraphe_t g, int *liste_label, int nb_label) {
   psommet_t sommet_act = g;
   while (sommet_act->label != liste_label[0])
     sommet_act = sommet_act->sommet_suivant;
-  pchemin_t c = (pchemin_t) malloc(sizeof(pchemin_t));
+  pchemin_t c = (pchemin_t) malloc(sizeof(chemin_t));
   c->nb_arc = nb_label - 1;
-  c->list_arc = malloc(sizeof(parc_t) * c->nb_arc);
+  c->list_arc = malloc(sizeof(arc_t) * c->nb_arc);
   c->debut = sommet_act;
   parc_t arc;
   for (int i = 1; i < nb_label; i++) {
@@ -444,8 +444,9 @@ int hamiltonien(pgraphe_t g, pchemin_t c) {
   }
   return 1;
 }
-
+/*
 int graphe_eulerien(pgraphe_t g) {
+
   reset_arc(g);
   reset_parcours(g);
   pgraphe_t sommet_act = g;
@@ -466,7 +467,7 @@ pgraphe_t trouver_sommet_suivant(pgraphe_t g, pgraphe_t act, pchemin_t c){
     arc_act = arc_act->arc_suivant;
   }
   return NULL;
-}
+}*/
 
 
 // ======================================================================
