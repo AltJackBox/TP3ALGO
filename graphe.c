@@ -374,6 +374,26 @@ int elementaire(pgraphe_t g, pchemin_t c) {
     }
     c->list_arc[i]->parcourus = 1;
   }
+  return 1;
+}
+
+int eulerien (pgraphe_t g, pchemin_t c) {
+  reset_arc(g);
+  // on parcours le chemin
+  for (int i =0; i < c->nb_arc; i++)
+    c->list_arc[i]->parcourus = 1;
+
+  // on vérifie que tout les arcs on été parcourus dans le graphe
+  psommet_t sommet_act = g;
+  parc_t arc;
+  while (sommet_act != NULL) {
+    arc = sommet_act->liste_arcs;
+    while (arc != NULL) {
+      if (arc->parcourus == 0)
+        return 0;
+      arc = arc->arc_suivant;
+    }
+    sommet_act = sommet_act->sommet_suivant;
   }
   return 1;
 }
