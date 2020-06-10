@@ -190,6 +190,27 @@ void reset_arc(pgraphe_t g) {
   }
 }
 
+pchemin_t creer_chemin(pgraphe_t g, int *liste_label, int nb_label) {
+  psommet_t sommet_act = g;
+  while (sommet_act->label != liste_label[0])
+    sommet_act = sommet_act->sommet_suivant;
+  pchemin_t c = (pchemin_t) malloc(sizeof(pchemin_t));
+  c->nb_arc = nb_label - 1;
+  c->list_arc = malloc(sizeof(parc_t) * c->nb_arc);
+  c->debut = sommet_act;
+  parc_t arc;
+  for (int i = 1; i < nb_label; i++) {
+    arc = sommet_act->liste_arcs;
+    while (arc->dest->label != liste_label[i]) {
+      arc = arc->arc_suivant;
+    }
+    c->list_arc[i-1] = arc;
+    sommet_act = arc->dest;
+  }
+  return c;
+
+}
+
 void afficher_graphe_largeur (pgraphe_t g, int r)
 {
   reset_parcours(g);
@@ -373,6 +394,26 @@ int elementaire(pgraphe_t g, pchemin_t c) {
       return 0;
     }
     c->list_arc[i]->parcourus = 1;
+  }
+  return 1;
+}
+
+int eulerien (pgraphe_t g, pchemin_t c) {
+  reset_arc(g);
+  // on parcours le chemin
+  for (int i =0; i < c->nb_arc; i++)
+    c->list_arc[i]->parcourus = 1;
+  // on vérifie que tout les arcs on été parcourus dans le graphe
+  psommet_t sommet_act = g;
+  parc_t arc;
+  while (sommet_act != NULL) {
+    arc = sommet_act->liste_arcs;
+    while (arc != NULL) {
+      if (arc->parcourus == 0)
+        return 0;
+      arc = arc->arc_suivant;
+    }
+    sommet_act = sommet_act->sommet_suivant;
   }
   return 1;
 }
