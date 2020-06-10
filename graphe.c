@@ -377,6 +377,43 @@ int elementaire(pgraphe_t g, pchemin_t c) {
   return 1;
 }
 
+int hamiltonien(pgraphe_t g, pchemin_t c) {
+  reset_parcours(g);
+  for(int i = 0; i<c->nb_arc; i++){
+    c->list_arc[i]->dest->parcourus = 1;
+  }
+  psommet_t sommet_act = g;
+  while(sommet_act != NULL){
+    if(sommet_act->parcourus == 0){
+      return 0;
+    }
+    sommet_act = sommet_act->sommet_suivant;
+  }
+  return 1;
+}
+
+int graphe_eulerien(pgraphe_t g) {
+  reset_arc(g);
+  reset_parcours(g);
+  pgraphe_t sommet_act
+}
+
+pgraphe_t trouver_sommet_suivant(pgraphe_t g, pgraphe_t act, pchemin_t c){
+  parc_t arc_act = act->liste_arcs;
+  while(arc_act != NULL) {
+    if (arc_act->parcourus == 0) {
+      arc_act->parcourus = 1;
+      if(!verif_pont(g)){
+        c->longueur += act->poids;
+        c->
+        return act->sommet_suivant;
+      }
+      arc_act->parcourus = 0;
+    }
+    arc_act = arc_act->arc_suivant
+  }
+  return NULL;
+}
 
 
 // ======================================================================
