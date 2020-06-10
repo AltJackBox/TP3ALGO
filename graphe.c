@@ -354,7 +354,12 @@ void algo_dijkstra (pgraphe_t g, int r)
 
 
 int eulerien (pgraphe_t g, chemin_t c) {
-  
+  psommet_t s;
+  psommet_t sommet_act = g;
+  parc_t arc;
+  while (sommet_act != NULL) {
+    arc = sommet_act
+  }
 }
 
 
