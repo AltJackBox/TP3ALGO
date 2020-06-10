@@ -387,6 +387,17 @@ void algo_dijkstra (pgraphe_t g, int r)
   return ;
 }
 
+int simple(pgraphe_t g, pchemin_t c) {
+  reset_arc(g);
+  for(int i = 0; i<c->nb_arc; i++){
+    if(c->list_arc[i]->parcourus == 1) {
+      return 0;
+    }
+    c->list_arc[i]->parcourus = 1;
+  }
+  return 1;
+}
+
 int elementaire(pgraphe_t g, pchemin_t c) {
   reset_parcours(g);
   c->debut->parcourus = 1;
