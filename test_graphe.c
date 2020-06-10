@@ -37,6 +37,9 @@ int main (int argc, char **argv)
 
   ecrire_graphe_colorie (g) ;
 
+  afficher_graphe_largeur(g,1);
+  algo_dijkstra(g,1);
+
   printf ("degre sortant du sommet = %d\n", degre_sortant_sommet (g,g)) ;
   printf ("degre entrant du sommet = %d\n", degre_entrant_sommet (g, g)) ;
   printf ("degre maximal du graphe = %d\n", degre_maximal_graphe (g)) ;
@@ -44,14 +47,84 @@ int main (int argc, char **argv)
   printf ("graphe indep ? = %d\n", independant (g)) ;
   printf ("graphe complet ? = %d\n", complet (g)) ;
   printf ("graphe regulier ? = %d\n", regulier (g)) ;
-  
-  
-  
-  
-  
-  
-  
 
-  // afficher_graphe_largeur(g,1);
-  // algo_dijkstra(g,1);
+  if (!strcmp(argv[1], "data/gr4")) {
+    pchemin_t c;
+    /*
+      Test chemin élémentaire
+    */
+    int label[4] = {1, 6, 2 , 3};
+    c = creer_chemin(g, label, 4);
+    if (elementaire(g, c)) {
+      printf("Le chemin ");
+      for (int i = 0; i < 4; i++)
+        printf("%d -> ", label[i]);
+      printf(" est elementaire\n");
+    } else {
+      printf("Le chemin ");
+      for (int i = 0; i < 4; i++)
+        printf("%c -> \n", label[i]);
+      printf(" n'est pas elementaire\n");
+    }
+
+    label[0] = 1;
+    label[1] =  6;
+    label[2] =  2;
+    label[3] =  1;
+    c = creer_chemin(g, label, 4);
+    if (elementaire(g, c)) {
+      printf("Le chemin ");
+      for (int i = 0; i < 4; i++)
+        printf("%d -> ", label[i]);
+      printf(" est elementaire\n");
+    } else {
+      printf("Le chemin ");
+      for (int i = 0; i < 4; i++)
+        printf("%d -> \n", label[i]);
+      printf(" n'est pas elementaire\n");
+    }
+
+    /*
+      Test chemin simple
+    */
+
+    /*
+      Test chemin eulerien
+    */
+    label[0] = 1;
+    label[1] =  6;
+    label[2] =  2;
+    label[3] =  1;
+    c = creer_chemin(g, label, 4);
+    if (eulerien(g, c)) {
+      printf("Le chemin ");
+      for (int i = 0; i < 4; i++)
+        printf("%d -> ", label[i]);
+      printf(" est eulerien\n");
+    } else {
+      printf("Le chemin ");
+      for (int i = 0; i < 4; i++)
+        printf("%d -> ", label[i]);
+      printf(" n'est pas eulerien\n");
+    }
+
+    int label_eule[13] = {1,6,2,1,6,2,3,4,5,3,6,2,5};
+    c = creer_chemin(g, label_eule, 13);
+    if (eulerien(g, c)) {
+      printf("Le chemin ");
+      for (int i = 0; i < 13; i++)
+        printf("%d -> ", label_eule[i]);
+      printf(" est eulerien\n");
+    } else {
+      printf("Le chemin ");
+      for (int i = 0; i < 13; i++)
+        printf("%d -> ", label_eule[i]);
+      printf(" n'est pas eulerien\n");
+    }
+
+  } else {
+    printf("Les test des chemins se font sur le graphe 4\n");
+  }
+
+  //pchemin_t c = creer_chemin(g)
 }

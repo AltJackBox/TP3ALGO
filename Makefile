@@ -1,5 +1,6 @@
 all: test_graphe
-OPTIONS_COMPIL = -Werror -Wall -g
+#OPTIONS_COMPIL = -Werror -Wall -g
+OPTIONS_COMPIL = -Wall -g
 
 test_graphe: test_graphe.o graphe.o io_graphe.o pile.o file.o
 	gcc -o $@ $^

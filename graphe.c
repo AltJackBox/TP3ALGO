@@ -190,6 +190,27 @@ void reset_arc(pgraphe_t g) {
   }
 }
 
+pchemin_t creer_chemin(pgraphe_t g, int *liste_label, int nb_label) {
+  psommet_t sommet_act = g;
+  while (sommet_act->label != liste_label[0])
+    sommet_act = sommet_act->sommet_suivant;
+  pchemin_t c = (pchemin_t) malloc(sizeof(pchemin_t));
+  c->nb_arc = nb_label - 1;
+  c->list_arc = malloc(sizeof(parc_t) * c->nb_arc);
+  c->debut = sommet_act;
+  parc_t arc;
+  for (int i = 1; i < nb_label; i++) {
+    arc = sommet_act->liste_arcs;
+    while (arc->dest->label != liste_label[i]) {
+      arc = arc->arc_suivant;
+    }
+    c->list_arc[i-1] = arc;
+    sommet_act = arc->dest;
+  }
+  return c;
+
+}
+
 void afficher_graphe_largeur (pgraphe_t g, int r)
 {
   reset_parcours(g);
@@ -366,7 +387,7 @@ void algo_dijkstra (pgraphe_t g, int r)
   return ;
 }
 
-int elementaire(pgraphe_t g, pchemin_t c) {
+int simple(pgraphe_t g, pchemin_t c) {
   reset_arc(g);
   for(int i = 0; i<c->nb_arc; i++){
     if(c->list_arc[i]->parcourus == 1) {
@@ -377,12 +398,23 @@ int elementaire(pgraphe_t g, pchemin_t c) {
   return 1;
 }
 
+int elementaire(pgraphe_t g, pchemin_t c) {
+  reset_parcours(g);
+  c->debut->parcourus = 1;
+  for(int i = 0; i<c->nb_arc; i++){
+    if(c->list_arc[i]->dest->parcourus == 1) {
+      return 0;
+    }
+    c->list_arc[i]->dest->parcourus = 1;
+  }
+  return 1;
+}
+
 int eulerien (pgraphe_t g, pchemin_t c) {
   reset_arc(g);
   // on parcours le chemin
   for (int i =0; i < c->nb_arc; i++)
     c->list_arc[i]->parcourus = 1;
-
   // on vérifie que tout les arcs on été parcourus dans le graphe
   psommet_t sommet_act = g;
   parc_t arc;
@@ -398,6 +430,43 @@ int eulerien (pgraphe_t g, pchemin_t c) {
   return 1;
 }
 
+int hamiltonien(pgraphe_t g, pchemin_t c) {
+  reset_parcours(g);
+  for(int i = 0; i<c->nb_arc; i++){
+    c->list_arc[i]->dest->parcourus = 1;
+  }
+  psommet_t sommet_act = g;
+  while(sommet_act != NULL){
+    if(sommet_act->parcourus == 0){
+      return 0;
+    }
+    sommet_act = sommet_act->sommet_suivant;
+  }
+  return 1;
+}
+
+int graphe_eulerien(pgraphe_t g) {
+  reset_arc(g);
+  reset_parcours(g);
+  pgraphe_t sommet_act = g;
+}
+
+pgraphe_t trouver_sommet_suivant(pgraphe_t g, pgraphe_t act, pchemin_t c){
+  parc_t arc_act = act->liste_arcs;
+  while(arc_act != NULL) {
+    if (arc_act->parcourus == 0) {
+      arc_act->parcourus = 1;
+      if(!verif_pont(g)){
+        c->longueur += arc_act->poids;
+        c->
+        return act->sommet_suivant;
+      }
+      arc_act->parcourus = 0;
+    }
+    arc_act = arc_act->arc_suivant;
+  }
+  return NULL;
+}
 
 
 // ======================================================================

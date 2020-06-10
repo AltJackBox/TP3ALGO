@@ -37,6 +37,7 @@ typedef struct chemin {
   int longueur ; //somme des poids des arcs
   parc_t *list_arc ; //liste des arcs du chemin;
   int nb_arc; //nombre d'arcs dans la liste.
+  psommet_t debut;
 } chemin_t, *pchemin_t;
 
 /*
@@ -63,6 +64,7 @@ void reset_parcours(pgraphe_t g);
 
 void reset_arc(pgraphe_t g);
 
+pchemin_t creer_chemin(pgraphe_t g, int *liste_label, int nb_label);
 
 
 int colorier_graphe (pgraphe_t g) ;
