@@ -490,7 +490,7 @@ pgraphe_t trouver_sommet_suivant(pgraphe_t g, pgraphe_t act, pchemin_t c){
   while(arc_act != NULL) {
     if (arc_act->parcourus == 0) {
       arc_act->parcourus = 1;
-      if(!verif_pont(g, g->label,arc_act->dest)){
+      if(!verif_pont(g, act->label,arc_act->dest)){
         c->longueur += arc_act->poids;
         c->list_arc[c->nb_arc] = arc_act;
         c->nb_arc++;
