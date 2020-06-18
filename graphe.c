@@ -552,13 +552,11 @@ int verif_pont(pgraphe_t g, int r, pgraphe_t g_verif)
     f[indice_plus_petit_sommet]->parcourus = 1;
     arc = f[indice_plus_petit_sommet]->liste_arcs;
     while (arc != NULL) {
-      if(arc->parcourus == 0){
-        indice_sommet_dest = indice(arc->dest, f, nb_sommets);
-        //relacher
-        if ((distance[indice_sommet_dest] == -1) || (distance[indice_sommet_dest] > distance[indice_plus_petit_sommet] + arc->poids)) {
-          distance[indice_sommet_dest] = distance[indice_plus_petit_sommet] + arc->poids;
-          parents[indice_sommet_dest] = f[indice_plus_petit_sommet];
-        }
+      indice_sommet_dest = indice(arc->dest, f, nb_sommets);
+      //relacher
+      if ((distance[indice_sommet_dest] == -1) || (distance[indice_sommet_dest] > distance[indice_plus_petit_sommet] + arc->poids)) {
+        distance[indice_sommet_dest] = distance[indice_plus_petit_sommet] + arc->poids;
+        parents[indice_sommet_dest] = f[indice_plus_petit_sommet];
       }
       arc = arc->arc_suivant;
     }
@@ -626,18 +624,14 @@ int excentricite (pgraphe_t g, int r)
     indice_plus_petit_sommet = plus_petite_distance(distance, f, nb_sommets);
     f[indice_plus_petit_sommet]->parcourus = 1;
     arc = f[indice_plus_petit_sommet]->liste_arcs;
-    if ((arc == NULL) || (distance[indice_plus_petit_sommet] == -1)) {
-      distance[indice_sommet_dest] = -1; // sommet non relié
-    } else {
-      while (arc != NULL) {
-        indice_sommet_dest = indice(arc->dest, f, nb_sommets);
-        //relacher
-        if ((distance[indice_sommet_dest] == -1) || (distance[indice_sommet_dest] > distance[indice_plus_petit_sommet] + arc->poids)) {
-          distance[indice_sommet_dest] = distance[indice_plus_petit_sommet] + arc->poids;
-          parents[indice_sommet_dest] = f[indice_plus_petit_sommet];
-        }
-        arc = arc->arc_suivant;
+    while (arc != NULL) {
+      indice_sommet_dest = indice(arc->dest, f, nb_sommets);
+      //relacher
+      if ((distance[indice_sommet_dest] == -1) || (distance[indice_sommet_dest] > distance[indice_plus_petit_sommet] + arc->poids)) {
+        distance[indice_sommet_dest] = distance[indice_plus_petit_sommet] + arc->poids;
+        parents[indice_sommet_dest] = f[indice_plus_petit_sommet];
       }
+      arc = arc->arc_suivant;
     }
   }
 
