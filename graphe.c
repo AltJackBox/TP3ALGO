@@ -571,7 +571,6 @@ int verif_pont(pgraphe_t g, int r, pgraphe_t g_verif)
         arc = arc->arc_suivant;
       }
     }
-
   }
 
   /*
@@ -709,6 +708,78 @@ int regulier (pgraphe_t g)
     sommet = sommet->sommet_suivant;
   }
   return 1;
+}
+
+int distanceBis (pgraphe_t g, int x, int y){
+
+  reset_parcours(g); //on reset le champ parcourus des sommets du graphes
+  int nb_sommets = nombre_sommets(g);
+  int *distance = (int *) malloc(sizeof(int) * nb_sommets);
+  // initialisation du tableau des distance
+  for (int i = 0; i < nb_sommets; i ++)
+    distance[i] = -1;
+
+  // initialisation des parents
+  psommet_t* parents = (psommet_t *) malloc(sizeof(psommet_t) * nb_sommets);
+  for (int i = 0; i < nb_sommets; i ++)
+    parents[i] = NULL;
+
+  psommet_t *f = (psommet_t *) malloc(sizeof(psommet_t) * nb_sommets);
+  psommet_t sommet_act = g;
+
+  for (int i = 0; i < nb_sommets; i ++) {
+    f[i] = sommet_act;
+    if (sommet_act->label == x)
+      distance[i] = 0;
+    sommet_act = sommet_act->sommet_suivant;
+  }
+  int indice_plus_petit_sommet;
+  int indice_sommet_dest;
+  parc_t arc;
+  while (!isAllScanned(g)) {
+    indice_plus_petit_sommet = plus_petite_distance(distance, f, nb_sommets);
+    f[indice_plus_petit_sommet]->parcourus = 1;
+    arc = f[indice_plus_petit_sommet]->liste_arcs;
+    if ((arc == NULL) || (distance[indice_plus_petit_sommet] == -1)) {
+      distance[indice_sommet_dest] = -1; // sommet non relié
+    } else {
+      while (arc != NULL) {
+        indice_sommet_dest = indice(arc->dest, f, nb_sommets);
+        //relacher
+        if ((distance[indice_sommet_dest] == -1) || (distance[indice_sommet_dest] > distance[indice_plus_petit_sommet] + arc->poids)) {
+          distance[indice_sommet_dest] = distance[indice_plus_petit_sommet] + arc->poids;
+          parents[indice_sommet_dest] = f[indice_plus_petit_sommet];
+        }
+        arc = arc->arc_suivant;
+      }
+    }
+  }
+  for (int i = 0; i < nb_sommets; i ++) {
+    if (f[i]->label == y) {
+      return distance[i];
+    }
+  }
+  free(distance);
+  free(parents);
+  free(f);
+  return -1;
+
+}
+
+int distance(pgraphe_t g, int x, int y){
+  int res1 = distanceBis(g, x, y);
+  int res2 = distanceBis(g, y, x);
+  if (res1 == -1){
+    return res2;
+  }
+  if (res2 == -1) {
+    return res1;
+  }
+  if (res1 > res2){
+    return res2;
+  } else {
+    return res1;
+  }
 }
 
 

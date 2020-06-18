@@ -199,4 +199,9 @@ int main (int argc, char **argv)
   } else {
     printf("\nLe graphe n'est pas eulerien\n");
   }
+
+  int distanceCalc = distance(g, 1, 3);
+  printf("Distance entre les labels 1 et 3 = %d\n", distanceCalc);
+  distanceCalc = distance(g, 2, 3);
+  printf("Distance entre les labels 2 et 1 = %d\n", distanceCalc);
 }
