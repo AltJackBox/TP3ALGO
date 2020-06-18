@@ -342,20 +342,15 @@ void algo_dijkstra (pgraphe_t g, int r)
     indice_plus_petit_sommet = plus_petite_distance(distance, f, nb_sommets);
     f[indice_plus_petit_sommet]->parcourus = 1;
     arc = f[indice_plus_petit_sommet]->liste_arcs;
-    if ((arc == NULL) || (distance[indice_plus_petit_sommet] == -1)) {
-      distance[indice_sommet_dest] = -1; // sommet non relié
-    } else {
-      while (arc != NULL) {
-        indice_sommet_dest = indice(arc->dest, f, nb_sommets);
-        //relacher
-        if ((distance[indice_sommet_dest] == -1) || (distance[indice_sommet_dest] > distance[indice_plus_petit_sommet] + arc->poids)) {
-          distance[indice_sommet_dest] = distance[indice_plus_petit_sommet] + arc->poids;
-          parents[indice_sommet_dest] = f[indice_plus_petit_sommet];
-        }
-        arc = arc->arc_suivant;
+    while (arc != NULL) {
+      indice_sommet_dest = indice(arc->dest, f, nb_sommets);
+      //relacher
+      if ((distance[indice_sommet_dest] == -1) || (distance[indice_sommet_dest] > distance[indice_plus_petit_sommet] + arc->poids)) {
+        distance[indice_sommet_dest] = distance[indice_plus_petit_sommet] + arc->poids;
+        parents[indice_sommet_dest] = f[indice_plus_petit_sommet];
       }
+      arc = arc->arc_suivant;
     }
-
   }
 
   /*
@@ -366,10 +361,10 @@ void algo_dijkstra (pgraphe_t g, int r)
 
   printf("ALGORITHME de Dijkstra \n label distance parents\n");
   for (int i = 0; i < nb_sommets; i ++) {
-    if (parents[i] != NULL) {
-      printf("  %d        %d        %d\n", f[i]->label, distance[i], parents[i]->label);
-    } else if (distance[i] == -1) {
+    if ((distance[i] == -1) || (distance[i] == 0)) {
       printf("  %d        INF        X\n", f[i]->label);
+    } else if (parents[i] != NULL) {
+      printf("  %d        %d        %d\n", f[i]->label, distance[i], parents[i]->label);
     } else {
       printf("  %d        %d        X\n", f[i]->label, distance[i]);
     }
@@ -556,22 +551,17 @@ int verif_pont(pgraphe_t g, int r, pgraphe_t g_verif)
     indice_plus_petit_sommet = plus_petite_distance(distance, f, nb_sommets);
     f[indice_plus_petit_sommet]->parcourus = 1;
     arc = f[indice_plus_petit_sommet]->liste_arcs;
-    if ((arc == NULL) || (distance[indice_plus_petit_sommet] == -1)) {
-      distance[indice_sommet_dest] = -1; // sommet non relié
-    } else {
-      while (arc != NULL) {
-        if(arc->parcourus == 0){
-          indice_sommet_dest = indice(arc->dest, f, nb_sommets);
-          //relacher
-          if ((distance[indice_sommet_dest] == -1) || (distance[indice_sommet_dest] > distance[indice_plus_petit_sommet] + arc->poids)) {
-            distance[indice_sommet_dest] = distance[indice_plus_petit_sommet] + arc->poids;
-            parents[indice_sommet_dest] = f[indice_plus_petit_sommet];
-          }
+    while (arc != NULL) {
+      if(arc->parcourus == 0){
+        indice_sommet_dest = indice(arc->dest, f, nb_sommets);
+        //relacher
+        if ((distance[indice_sommet_dest] == -1) || (distance[indice_sommet_dest] > distance[indice_plus_petit_sommet] + arc->poids)) {
+          distance[indice_sommet_dest] = distance[indice_plus_petit_sommet] + arc->poids;
+          parents[indice_sommet_dest] = f[indice_plus_petit_sommet];
         }
-        arc = arc->arc_suivant;
       }
+      arc = arc->arc_suivant;
     }
-
   }
 
   /*
