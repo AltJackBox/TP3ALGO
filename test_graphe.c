@@ -204,4 +204,9 @@ int main (int argc, char **argv)
   } else {
     printf("\nLe graphe n'est pas eulerien\n");
   }
+
+  if (graphe_hamiltonien(g))
+    printf("\nLe graphe est hamiltonien\n");
+  else
+    printf("\nLe graphe n'est pas hamiltonien\n");
 }

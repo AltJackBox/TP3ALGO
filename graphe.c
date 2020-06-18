@@ -462,12 +462,6 @@ int graphe_eulerien(pgraphe_t g) {
       sommet_act = trouver_sommet_suivant(g, sommet_act, chemin);
     }
 
-
-    printf("%d ", chemin->debut->label);
-    for(int i = 0; i<chemin->nb_arc; i++){
-      printf("%d ", chemin->list_arc[i]->dest->label);
-    }
-    printf("\n");
     if(eulerien(g,chemin)){
       return 1;
     }
@@ -552,11 +546,13 @@ int verif_pont(pgraphe_t g, int r, pgraphe_t g_verif)
     f[indice_plus_petit_sommet]->parcourus = 1;
     arc = f[indice_plus_petit_sommet]->liste_arcs;
     while (arc != NULL) {
-      indice_sommet_dest = indice(arc->dest, f, nb_sommets);
-      //relacher
-      if ((distance[indice_sommet_dest] == -1) || (distance[indice_sommet_dest] > distance[indice_plus_petit_sommet] + arc->poids)) {
-        distance[indice_sommet_dest] = distance[indice_plus_petit_sommet] + arc->poids;
-        parents[indice_sommet_dest] = f[indice_plus_petit_sommet];
+      if(arc->parcourus == 0){
+        indice_sommet_dest = indice(arc->dest, f, nb_sommets);
+        //relacher
+        if ((distance[indice_sommet_dest] == -1) || (distance[indice_sommet_dest] > distance[indice_plus_petit_sommet] + arc->poids)) {
+          distance[indice_sommet_dest] = distance[indice_plus_petit_sommet] + arc->poids;
+          parents[indice_sommet_dest] = f[indice_plus_petit_sommet];
+        }
       }
       arc = arc->arc_suivant;
     }
@@ -578,6 +574,42 @@ int verif_pont(pgraphe_t g, int r, pgraphe_t g_verif)
   free(parents);
   free(f);
   return 0;
+}
+
+
+/*
+
+*/
+int graphe_hamiltonien (pgraphe_t g) {
+  /*
+  INITIALISATION
+  On "classe" les sommmets par degree dans un tableau
+  */
+  int nb_degree = degre_maximal_graphe (g);
+  int *nb_point_degree = malloc(sizeof(int) * nb_degree);
+  for (int i = 0; i < nb_degree; i ++)
+    nb_point_degree[i] = 0;
+
+
+  psommet_t sommet_act = g;
+  while (sommet_act != NULL) {
+    nb_point_degree[degre_sortant_sommet(g, sommet_act) + degre_entrant_sommet(g, sommet_act)] += 1;
+    sommet_act = sommet_act->sommet_suivant;
+  }
+
+  for (int i  = 1; i < nombre_sommets(g)/2; i ++) {
+    if (nb_point_degree[i] > i) {
+      free(nb_point_degree);
+      return 0;
+    }
+
+  }
+
+  /*
+  FIN
+  */
+  free(nb_point_degree);
+  return 1;
 }
 
 
@@ -668,8 +700,6 @@ int diametre(pgraphe_t g){
   }
   return d_max;
 }
-
-
 // ======================================================================
 
 
