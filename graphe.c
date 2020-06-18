@@ -552,13 +552,11 @@ int verif_pont(pgraphe_t g, int r, pgraphe_t g_verif)
     f[indice_plus_petit_sommet]->parcourus = 1;
     arc = f[indice_plus_petit_sommet]->liste_arcs;
     while (arc != NULL) {
-      if(arc->parcourus == 0){
-        indice_sommet_dest = indice(arc->dest, f, nb_sommets);
-        //relacher
-        if ((distance[indice_sommet_dest] == -1) || (distance[indice_sommet_dest] > distance[indice_plus_petit_sommet] + arc->poids)) {
-          distance[indice_sommet_dest] = distance[indice_plus_petit_sommet] + arc->poids;
-          parents[indice_sommet_dest] = f[indice_plus_petit_sommet];
-        }
+      indice_sommet_dest = indice(arc->dest, f, nb_sommets);
+      //relacher
+      if ((distance[indice_sommet_dest] == -1) || (distance[indice_sommet_dest] > distance[indice_plus_petit_sommet] + arc->poids)) {
+        distance[indice_sommet_dest] = distance[indice_plus_petit_sommet] + arc->poids;
+        parents[indice_sommet_dest] = f[indice_plus_petit_sommet];
       }
       arc = arc->arc_suivant;
     }
@@ -581,6 +579,96 @@ int verif_pont(pgraphe_t g, int r, pgraphe_t g_verif)
   free(f);
   return 0;
 }
+
+
+int excentricite (pgraphe_t g, int r)
+{
+  /*
+    ##############################
+    INITIALISATION de l'algorithme
+    ##############################
+  */
+
+  reset_parcours(g); //on reset le champ parcourus des sommets du graphes
+  int nb_sommets = nombre_sommets(g);
+  int *distance = (int *) malloc(sizeof(int) * nb_sommets);
+  // initialisation du tableau des distance
+  for (int i = 0; i < nb_sommets; i ++)
+    distance[i] = -1;
+
+  // initialisation des parents
+  psommet_t* parents = (psommet_t *) malloc(sizeof(psommet_t) * nb_sommets);
+  for (int i = 0; i < nb_sommets; i ++)
+    parents[i] = NULL;
+
+  psommet_t *f = (psommet_t *) malloc(sizeof(psommet_t) * nb_sommets);
+  psommet_t sommet_act = g;
+
+  for (int i = 0; i < nb_sommets; i ++) {
+    f[i] = sommet_act;
+    if (sommet_act->label == r)
+      distance[i] = 0;
+
+    sommet_act = sommet_act->sommet_suivant;
+  }
+
+  /*
+    ##############################
+              ALGORITHME
+    ##############################
+  */
+  int indice_plus_petit_sommet;
+  int indice_sommet_dest;
+  parc_t arc;
+  while (!isAllScanned(g)) {
+    indice_plus_petit_sommet = plus_petite_distance(distance, f, nb_sommets);
+    f[indice_plus_petit_sommet]->parcourus = 1;
+    arc = f[indice_plus_petit_sommet]->liste_arcs;
+    while (arc != NULL) {
+      indice_sommet_dest = indice(arc->dest, f, nb_sommets);
+      //relacher
+      if ((distance[indice_sommet_dest] == -1) || (distance[indice_sommet_dest] > distance[indice_plus_petit_sommet] + arc->poids)) {
+        distance[indice_sommet_dest] = distance[indice_plus_petit_sommet] + arc->poids;
+        parents[indice_sommet_dest] = f[indice_plus_petit_sommet];
+      }
+      arc = arc->arc_suivant;
+    }
+  }
+
+  int d_max = distance[0];
+  for (int i = 1; i<nb_sommets;i++){
+    if(distance[i]>d_max){
+      d_max = distance[i];
+    }
+  }
+
+  /*
+    ##############################
+                FIN
+    ##############################
+  */
+  free(distance);
+  free(parents);
+  free(f);
+
+  return d_max;
+}
+
+
+int diametre(pgraphe_t g){
+  int d_max = excentricite(g, g->label);
+  int tmp;
+  pgraphe_t suiv = g->sommet_suivant;
+  while(suiv != NULL){
+    tmp = excentricite(g, suiv->label);
+    if (tmp > d_max){
+      d_max = tmp;
+    }
+    suiv = suiv->sommet_suivant;
+  }
+  return d_max;
+}
+
 
 // ======================================================================
 
