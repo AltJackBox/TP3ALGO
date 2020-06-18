@@ -190,6 +190,11 @@ int main (int argc, char **argv)
       printf(" n'est pas hamiltonien\n");
     }
 
+    for (int i = 0; i < 6; i ++)
+      printf("L'exentricité du sommmet %d est %d \n", i, excentricite(g, i));
+
+    printf("Le diametre du graphe 4 est %d\n", diametre(g));
+
   } else {
     printf("Les test des chemins se font sur le graphe 4\n");
   }
